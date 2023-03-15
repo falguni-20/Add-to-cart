@@ -6,44 +6,45 @@ import {
   Typography,
 } from "@mui/material";
 import { Box } from "@mui/system";
-import { Navigate } from "react-router-dom";
+// import { Navigate,useNavigate } from "react-router-dom";
+import { useForm } from "react-hook-form";
+import { SnackbarProvider, useSnackbar } from "notistack";
 
 
 import React, { useRef, useState } from "react";
-import { NavLink, useNavigate } from "react-router-dom";
-import Home from "./Home";
+import {
+  //  NavLink,
+  useNavigate,
+} from "react-router-dom";
+
+// import Home from "./Home";
 import Homepage from "./Homepage";
+// import HM_memeber from "./HM_memeber";
 
+export default function Login() {
+  const { register, handleSubmit } = useForm();
+  const { enqueueSnackbar, closeSnackbar } = useSnackbar();
 
-export default function Login(props) {
-  const email2 = useRef();
-  const password2 = useRef();
+  const getemail = localStorage.getItem("email");
+  const getpass = localStorage.getItem("pass")
 
-  const getemail = props.title1;
-  const getpass = props.title1;
-
-  // const navi=useNavigate()
-  const navigate = useNavigate();
-  
-  const handeClick2 = () => {
-    debugger;
-    // console.log(email2.current.value, password2.current.value);
-    const loginemail = email2.current.value;
-    const loginpass = password2.current.value;
-    const flag = 0;
-    if (getemail == loginemail && getpass == loginpass){
-    
+  const onSubmit = (data) => {
+    const curr_email = data.email;
+    const curr_pass = data.password;
+    if (getemail === curr_email && getpass === curr_pass) {
+     
       navigate("/homepage");
       
+    } else {
+      enqueueSnackbar("Incorrect information !!",{ variant: 'error' });
+     
     }
-    
-  };
-
-
+  }; 
+  const navigate = useNavigate();
 
   return (
     <div>
-      <form>
+      <form onSubmit={handleSubmit(onSubmit)}>
         <Box
           display="flex"
           flexDirection={"column"}
@@ -63,38 +64,40 @@ export default function Login(props) {
           }}
         >
           <Typography variant="h4" padding={3} textAlign="center" color="black">
-            Log in
+            Log In 
           </Typography>
 
           <TextField
-            // type={"email"}
             variant="standard"
             placeholder="Enter email"
             margin="normal"
             required
-            inputRef={email2}
+            {...register("email")}
           ></TextField>
           <TextField
-            // type={"Password"}
             variant="standard"
             placeholder="Enter Password"
             margin="normal"
             required
-            inputRef={password2}
+            {...register("password")}
           ></TextField>
 
           <Button
             type="submit"
             variant="contained"
             color="warning"
-            sx={{ marginTop: 3, borderRadius: 3 }}
-            onClick={handeClick2}
+            
+            sx={{ marginTop: 4, borderRadius: 3 }}
           >
-           login
+            login
           </Button>
-          <Button color="primary" sx={{ marginTop: 3, borderRadius: 3 }} >
-            Click here to Sign up
-          </Button>
+        
+
+<Button color="primary" sx={{ marginTop: 3, borderRadius: 3 }} onClick={()=>{
+                  // console.log("hello");
+                  navigate("/");
+              }}>click here to Signup</Button>
+        
         </Box>
       </form>
     </div>
